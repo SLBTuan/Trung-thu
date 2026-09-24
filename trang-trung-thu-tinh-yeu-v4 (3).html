@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Nhạc nền</title>
+</head>
+
+<body>
+
+<button id="audioBtn">♫ Bật âm thanh</button>
+<p id="audioStatus"></p>
+
+<script>
+const musicUrl = './thegioicuaanh.mp3';
+
+let audio = new Audio();
+let audioOn = false;
+
+// Cấu hình audio
+audio.src = musicUrl;
+audio.loop = true;
+audio.volume = 0.5;
+audio.preload = 'auto';
+
+// Kiểm tra khi file nhạc tải thành công
+audio.addEventListener('canplaythrough', () => {
+    console.log('✅ File MP3 đã tải thành công');
+    document.getElementById('audioStatus').textContent =
+        'Đã tải nhạc thành công.';
+});
+
+// Báo lỗi
+audio.addEventListener('error', (e) => {
+    console.error('❌ Không thể tải file MP3:', e);
+    document.getElementById('audioStatus').textContent =
+        '❌ Không tìm thấy hoặc không thể đọc file thegioicuaanh.mp3';
+});
+
+// Khi nhạc bắt đầu phát
+audio.addEventListener('playing', () => {
+    console.log('🔊 Nhạc đang phát');
+    document.getElementById('audioStatus').textContent =
+        '🔊 Nhạc đang phát';
+});
+
+// Khi nhạc bị dừng
+audio.addEventListener('pause', () => {
+    console.log('⏸ Nhạc đã dừng');
+});
+
+// Nút bật/tắt
+document.getElementById('audioBtn').addEventListener('click', async () => {
+
+    if (!audioOn) {
+        try {
+            await audio.play();
+
+            audioOn = true;
+
+            document.getElementById('audioBtn').textContent =
+                '🔇 Tắt âm thanh';
+
+        } catch (error) {
+            console.error('❌ Lỗi phát nhạc:', error);
+
+            document.getElementById('audioStatus').textContent =
+                '❌ Trình duyệt không thể phát file nhạc.';
+        }
+
+    } else {
+
+        audio.pause();
+        audio.currentTime = 0;
+
+        audioOn = false;
+
+        document.getElementById('audioBtn').textContent =
+            '♫ Bật âm thanh';
+
+        document.getElementById('audioStatus').textContent =
+            'Đã tắt nhạc';
+    }
+});
+</script>
+
+</body>
+</html>

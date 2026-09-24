@@ -228,7 +228,6 @@ section{position:relative;min-height:100svh;display:grid;place-items:center;padd
     <div class="enter-row">
       <button class="moon-btn" id="enterMoon" aria-label="Mở web"></button>
       <button class="pill" id="enterBtn">Mở món quà ✦</button>
-      <button class="pill secondary" id="skipIntro">Xem ngay</button>
     </div>
     <div class="intro-note">Gợi ý: chạm vào ảnh để phóng to · chạm đèn lồng để mở lời nhắn.</div>
   </div>
@@ -416,15 +415,25 @@ section{position:relative;min-height:100svh;display:grid;place-items:center;padd
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const overlay = $('#overlay');
+let hasStarted = false;
 function startExperience(){
   overlay.classList.add('hidden');
   document.body.classList.remove('lock');
   setTimeout(() => overlay.style.display = 'none', 950);
   $('#hero').scrollIntoView({behavior:'smooth'});
   if(heartsEnabled) startHeartLoop();
+  if (!hasStarted) {
+    hasStarted = true;
+
+    audio.play().then(() => {
+      audioOn = true;
+      document.getElementById('audioBtn').textContent = 'Tắt âm';
+    }).catch(error => {
+      console.error('Không thể phát nhạc:', error);
+    });
+  }
 }
 $('#enterBtn').onclick = startExperience;
-$('#skipIntro').onclick = startExperience;
 $('#enterMoon').onclick = startExperience;
 
 const progress = $('#progress');
@@ -508,30 +517,33 @@ $('#openLetter').onclick = () => letterModal.classList.add('open');
 $('#closeLetter').onclick = () => letterModal.classList.remove('open');
 letterModal.addEventListener('click', e => { if(e.target === letterModal) letterModal.classList.remove('open'); });
 
-let audioCtx, notes = [], audioOn = false;
-function stopAudio(){
-  notes.forEach(n => { try{ n.stop(); } catch(e){} });
-  notes = [];
-  audioOn = false;
-  $('#audioBtn').textContent = '♫ Âm thanh';
-}
-function startAudio(){
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const master = audioCtx.createGain();
-  master.gain.value = .022;
-  master.connect(audioCtx.destination);
-  [220,329.63,392,440].forEach((freq, i) => {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-    osc.frequency.value = freq;
-    gain.gain.value = i === 1 ? .18 : .11;
-    osc.connect(gain); gain.connect(master); osc.start(); notes.push(osc);
-  });
-  audioOn = true;
-  $('#audioBtn').textContent = 'Tắt âm';
-}
-$('#audioBtn').onclick = () => audioOn ? stopAudio() : startAudio();
+const audio = new Audio('./thegioicuaanh.mp3');
+
+audio.loop = true;
+audio.volume = 0.15;
+
+let audioOn = false;
+
+document.getElementById('audioBtn').addEventListener('click', async () => {
+    if (!audioOn) {
+        try {
+            await audio.play();
+
+            audioOn = true;
+            document.getElementById('audioBtn').textContent = 'Tắt âm';
+
+        } catch (error) {
+            console.error('Không thể phát nhạc:', error);
+        }
+
+    } else {
+        audio.pause();
+        audio.currentTime = 0;
+
+        audioOn = false;
+        document.getElementById('audioBtn').textContent = '♫ Âm thanh';
+    }
+});
 
 // hearts
 const heartsLayer = $('#heartsLayer');
