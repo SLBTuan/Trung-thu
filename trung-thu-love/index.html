@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Trăng này, anh muốn ngắm cùng em · V4 Galaxy Heart</title>
+<meta name="theme-color" content="#090d1c" />
+<style>
+:root{
+  --bg:#060914;
+  --bg2:#0f1731;
+  --card:rgba(15,20,40,.58);
+  --line:rgba(255,255,255,.12);
+  --text:#fffaf5;
+  --muted:#e2dbd1;
+  --gold:#ffd27d;
+  --gold-soft:#fff1c4;
+  --rose:#ffb5cf;
+  --pink:#ff7aa8;
+  --violet:#8f7cff;
+  --sky:#5cc9ff;
+  --shadow:0 28px 90px rgba(0,0,0,.40);
+  --radius:32px;
+  --max:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+  radial-gradient(circle at 12% 0%,rgba(141,117,255,.18),transparent 34%),
+  radial-gradient(circle at 92% 10%,rgba(255,188,110,.14),transparent 26%),
+  radial-gradient(circle at 70% 42%,rgba(92,201,255,.08),transparent 22%),
+  linear-gradient(180deg,#101630 0%,#090e1d 26%,#050810 100%);
+  overflow-x:hidden}
+body.lock{overflow:hidden}
+img{max-width:100%;display:block}
+button,a{font:inherit;color:inherit}
+.serif{font-family:Georgia,"Times New Roman",serif}
+#stars,.aurora,.mist,.grain,.galaxy-clouds,.shooting-stars,.hearts-layer{position:fixed;inset:0;pointer-events:none}
+#stars{z-index:-6}
+.galaxy-clouds{z-index:-5;background:
+  radial-gradient(circle at 16% 18%,rgba(255,125,190,.10),transparent 20%),
+  radial-gradient(circle at 78% 14%,rgba(109,120,255,.14),transparent 24%),
+  radial-gradient(circle at 80% 62%,rgba(89,207,255,.10),transparent 18%),
+  radial-gradient(circle at 42% 82%,rgba(254,211,136,.08),transparent 22%);
+  filter:blur(18px);opacity:.95}
+.aurora{z-index:-4;background:
+  radial-gradient(circle at 18% 22%,rgba(255,166,206,.08),transparent 26%),
+  radial-gradient(circle at 84% 16%,rgba(255,219,131,.12),transparent 20%),
+  radial-gradient(circle at 52% 84%,rgba(110,98,255,.10),transparent 28%)}
+.mist{z-index:-3;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+.shooting-stars{z-index:-2;overflow:hidden}
+.shooting-stars i{position:absolute;left:-20%;width:180px;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9),rgba(255,255,255,0));transform:rotate(-18deg);opacity:.0;animation:shoot 12s linear infinite}
+.shooting-stars i:nth-child(1){top:12%;animation-delay:0s}
+.shooting-stars i:nth-child(2){top:32%;animation-delay:3.2s;width:220px}
+.shooting-stars i:nth-child(3){top:58%;animation-delay:6.7s;width:150px}
+.shooting-stars i:nth-child(4){top:22%;animation-delay:9.5s;width:200px}
+@keyframes shoot{0%,82%,100%{transform:translateX(0) rotate(-18deg);opacity:0}84%{opacity:.95}90%{transform:translateX(150vw) rotate(-18deg);opacity:.9}96%{opacity:0}}
+.grain{z-index:110;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E")}
+.progress{position:fixed;left:0;bottom:0;height:3px;background:linear-gradient(90deg,#efb55c,#ffe5aa,#f2a7c2,#9fdcff);width:0;z-index:130}
+.hearts-layer{z-index:80;overflow:hidden}
+.heart-float{position:absolute;bottom:-40px;font-size:22px;opacity:.28;animation:heartRise linear forwards;filter:drop-shadow(0 0 8px rgba(255,133,178,.25))}
+@keyframes heartRise{to{transform:translateY(-120vh) translateX(var(--drift)) scale(var(--scale));opacity:0}}
+
+.overlay{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 18%,rgba(255,237,190,.10),transparent 22%),linear-gradient(180deg,rgba(5,8,16,.91),rgba(4,6,12,.98));backdrop-filter:blur(10px);transition:opacity .9s ease,visibility .9s ease}
+.overlay.hidden{opacity:0;visibility:hidden}
+.envelope{width:min(92vw,780px);border:1px solid rgba(255,255,255,.12);border-radius:36px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));box-shadow:var(--shadow);padding:30px;position:relative;overflow:hidden}
+.envelope:before{content:"";position:absolute;right:-70px;bottom:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,219,132,.34),transparent 70%)}
+.envelope:after{content:"";position:absolute;left:-40px;top:-60px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(255,125,190,.18),transparent 70%)}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,230,180,.30);background:rgba(255,230,180,.08);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#f5d89a}
+.envelope h1{margin:18px 0 12px;font-size:clamp(38px,6vw,70px);line-height:.98;font-weight:500}
+.envelope p{margin:0;font-size:clamp(16px,2vw,19px);line-height:1.85;color:#efe6d8;max-width:650px}
+.enter-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:24px}
+.moon-btn{width:88px;height:88px;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 36% 34%,#fff8d8 0 10%,#ffe29a 36%,#efb960 68%,#a46330 100%);box-shadow:0 0 0 10px rgba(255,214,126,.10),0 0 40px rgba(255,203,109,.34);animation:moonPulse 2.8s ease-in-out infinite}
+@keyframes moonPulse{50%{transform:scale(1.05);box-shadow:0 0 0 15px rgba(255,214,126,.06),0 0 54px rgba(255,203,109,.46)}}
+.pill{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,234,188,.42);background:rgba(255,225,157,.10);color:#fff4d7;text-decoration:none;cursor:pointer;transition:.25s}
+.pill.secondary{background:rgba(255,255,255,.06);border-color:var(--line);color:#f8f2e8}
+.pill:hover{transform:translateY(-2px)}
+.intro-note{margin-top:16px;font-size:13px;letter-spacing:.05em;color:#ddcfaf}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:95;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(180deg,rgba(6,10,18,.82),rgba(6,10,18,.18),transparent);backdrop-filter:blur(8px)}
+.brand{display:flex;flex-direction:column;gap:3px}
+.brand b{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:#f4d08a}
+.brand span{font-size:11px;color:#d8d1c5;opacity:.84}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.small-btn{border:1px solid var(--line);background:rgba(255,255,255,.07);color:#fff;border-radius:999px;padding:9px 12px;cursor:pointer;text-decoration:none}
+.dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:95;display:flex;flex-direction:column;gap:10px}
+.dots a{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);transition:.3s}
+.dots a.active{height:28px;background:linear-gradient(180deg,#ffd98e,#f3abc3,#88d6ff)}
+
+main{position:relative}
+section{position:relative;min-height:100svh;display:grid;place-items:center;padding:94px 20px 64px}
+.wrap{width:min(var(--max),100%);margin:auto}
+.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));backdrop-filter:blur(14px);box-shadow:var(--shadow);border-radius:36px}
+.reveal{opacity:0;transform:translateY(28px) scale(.985);transition:opacity .95s ease,transform .95s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,236,190,.28);background:rgba(255,233,176,.08);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#f6da9d}
+.copy{padding:36px}
+.copy h2{margin:16px 0 18px;font-size:clamp(36px,5vw,72px);line-height:1.04;font-weight:500}
+.copy p{margin:0;font-size:clamp(16px,2vw,20px);line-height:1.9;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1.06fr .94fr;gap:28px;align-items:center}
+.figure{position:relative;overflow:hidden;min-height:590px;border-radius:36px;border:1px solid var(--line);background:#0f162b}
+.figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .85s ease}
+.figure:hover img{transform:scale(1.04)}
+.figure:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 46%,rgba(0,0,0,.52))}
+.figure-note{position:absolute;left:24px;right:24px;bottom:22px;z-index:2;color:#fff3df;text-shadow:0 4px 18px rgba(0,0,0,.66)}
+.figure-note b{display:block;font-size:24px;margin-bottom:6px}
+.hero{overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(5,8,14,.18),rgba(5,8,14,.80)),
+  radial-gradient(circle at 20% 20%,rgba(255,112,176,.16),transparent 18%),
+  radial-gradient(circle at 80% 12%,rgba(115,112,255,.20),transparent 20%),
+  radial-gradient(circle at 74% 58%,rgba(96,203,255,.12),transparent 20%),
+  url('assets/sunset.jpg') center/cover no-repeat;
+  transform:scale(1.06)}
+.hero-moon{position:absolute;right:-9vw;top:8vh;width:min(46vw,540px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 36% 34%,#fff9dc 0 10%,#ffe8aa 36%,#f6c36d 68%,#a96833 100%);box-shadow:0 0 54px rgba(255,217,140,.45),0 0 140px rgba(255,217,140,.18)}
+.hero-moon:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 67% 28%,rgba(92,54,20,.12) 0 4%,transparent 5%),radial-gradient(circle at 30% 68%,rgba(92,54,20,.10) 0 6%,transparent 7%),radial-gradient(circle at 59% 77%,rgba(92,54,20,.12) 0 5%,transparent 6%)}
+.orbit-heart{position:absolute;right:16vw;top:15vh;width:38px;height:38px;transform-origin:160px 120px;animation:orbit 16s linear infinite;z-index:2;filter:drop-shadow(0 0 14px rgba(255,126,180,.40))}
+.orbit-heart:before,.orbit-heart:after{content:"";position:absolute;width:22px;height:34px;background:linear-gradient(180deg,#ff9bc1,#ff6ea4);border-radius:22px 22px 0 0}
+.orbit-heart:before{left:8px;transform:rotate(-45deg);transform-origin:0 100%}
+.orbit-heart:after{left:0;transform:rotate(45deg);transform-origin:100% 100%}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.hero-copy{position:relative;z-index:2;text-align:center;max-width:920px}
+.hero h1{margin:18px 0 14px;font-size:clamp(44px,8vw,102px);line-height:.94;font-weight:500;text-shadow:0 8px 34px rgba(0,0,0,.42)}
+.hero p{margin:0 auto 28px;max-width:780px;font-size:clamp(17px,2.2vw,24px);line-height:1.82;color:#efe6d9}
+.hero-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+.scroll-badge{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#efe2c6;display:flex;flex-direction:column;gap:8px;align-items:center;opacity:.9}
+.scroll-badge:after{content:"";width:1px;height:54px;background:linear-gradient(180deg,rgba(255,255,255,.58),transparent)}
+
+.lanterns{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lantern{position:absolute;width:36px;height:46px;border-radius:44% 44% 36% 36%;background:linear-gradient(90deg,#d86f51,#ffd392,#c85649);box-shadow:0 0 28px rgba(255,166,101,.42);opacity:.64;animation:floatUp linear infinite}
+.lantern:before{content:"";position:absolute;left:14px;top:46px;height:16px;border-left:1px solid rgba(255,231,177,.9)}
+.lantern:nth-child(1){left:8%;bottom:-60px;animation-duration:19s}.lantern:nth-child(2){left:82%;bottom:-100px;animation-duration:24s;animation-delay:4s;transform:scale(.82)}.lantern:nth-child(3){left:18%;bottom:-120px;animation-duration:26s;animation-delay:9s;transform:scale(.66)}.lantern:nth-child(4){left:92%;bottom:-90px;animation-duration:22s;animation-delay:11s;transform:scale(.54)}.lantern:nth-child(5){left:67%;bottom:-120px;animation-duration:28s;animation-delay:14s;transform:scale(.74)}
+@keyframes floatUp{to{transform:translateY(-120vh) translateX(34px) rotate(5deg)}}
+
+.quote-block{text-align:center;padding:42px 32px}
+.quote-mark{font-size:72px;line-height:1;color:#f0c87d;opacity:.8}
+.quote-block h2{margin:0 0 16px;font-size:clamp(36px,5.8vw,72px);font-weight:500;line-height:1.12}
+.quote-block p{margin:0 auto;max-width:840px;font-size:clamp(16px,2vw,20px);line-height:1.9;color:#dfd8cc}
+
+.polaroids{display:flex;flex-wrap:wrap;justify-content:center;gap:22px;padding:20px 12px 10px}
+.polaroid{width:min(230px,44vw);background:#f7f1e9;color:#2e251f;padding:14px 14px 20px;border-radius:4px;box-shadow:0 16px 40px rgba(0,0,0,.24);transform:rotate(var(--r));transition:.35s;cursor:pointer;position:relative}
+.polaroid:nth-child(2n){margin-top:24px}
+.polaroid:hover{transform:translateY(-8px) rotate(var(--r))}
+.polaroid:before{content:"";position:absolute;top:-11px;left:50%;transform:translateX(-50%) rotate(-2deg);width:84px;height:24px;border-radius:2px;background:rgba(255,225,145,.55)}
+.polaroid img{width:100%;aspect-ratio:4/5;object-fit:cover;margin-bottom:12px}
+.polaroid b{display:block;font-size:18px;margin-bottom:6px;font-family:Georgia,"Times New Roman",serif}
+.polaroid span{font-size:14px;line-height:1.6;color:#4d443d}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:22px}
+.card{position:relative;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border-radius:30px;overflow:hidden;box-shadow:0 18px 56px rgba(0,0,0,.26)}
+.card.photo{cursor:pointer}
+.card.photo img{width:100%;height:100%;object-fit:cover;transition:transform .75s ease}
+.card.photo:hover img{transform:scale(1.04)}
+.card.photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.54))}
+.caption{position:absolute;left:18px;right:18px;bottom:16px;z-index:2;color:#fff;font-size:13px;line-height:1.5}
+.text-card{padding:28px}
+.text-card h3{margin:0 0 12px;font-size:32px;font-weight:500}
+.text-card p{margin:0;color:#d8d2c6;line-height:1.82}
+.span-7{grid-column:span 7;min-height:470px}.span-5{grid-column:span 5;min-height:220px}.span-6{grid-column:span 6;min-height:280px}.span-4{grid-column:span 4;min-height:280px}.span-8{grid-column:span 8;min-height:320px}
+
+.timeline{display:grid;gap:18px}
+.t-row{display:grid;grid-template-columns:100px 1fr;gap:18px;align-items:start;padding:20px;border-top:1px solid var(--line)}
+.t-row:first-child{border-top:none}
+.t-num{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#f2ca7e;margin-top:8px}
+.t-row h3{margin:0 0 8px;font-size:28px;font-weight:500}
+.t-row p{margin:0;color:#d8d2c6;line-height:1.82}
+.promise{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+.tall{min-height:690px}
+.badge{position:absolute;left:20px;top:20px;z-index:2;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,240,214,.32);background:rgba(255,255,255,.08);backdrop-filter:blur(6px);font-size:13px;color:#fff2d8}
+.ring-glow{position:absolute;inset:auto 10% 8% 10%;height:120px;background:radial-gradient(ellipse,rgba(255,234,173,.7),transparent 70%);filter:blur(24px);opacity:.58}
+
+.wishes{display:grid;grid-template-columns:1.02fr .98fr;gap:28px;align-items:center}
+.wish-note{min-height:430px;padding:34px 28px;display:flex;flex-direction:column;justify-content:center}
+.wish-note small{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#f0ca81}
+.wish-note h3{font-size:44px;line-height:1.08;font-weight:500;margin:12px 0}
+.wish-note p{margin:0;font-size:18px;line-height:1.85;color:#e2dbcf}
+.note-box{margin-top:18px;padding:18px;border-radius:22px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.16);min-height:118px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff4dd;font-size:18px;line-height:1.8}
+.wish-cloud{position:relative;min-height:530px;padding:24px;overflow:hidden}
+.wish-cloud:before{content:"";position:absolute;right:14%;top:8%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,216,130,.26),transparent 68%)}
+.wish-lantern{position:absolute;border:0;cursor:pointer;width:92px;height:126px;border-radius:48% 48% 38% 38%;background:linear-gradient(90deg,#d96d51,#ffd18f,#c75247);box-shadow:0 0 30px rgba(255,164,93,.35);display:flex;align-items:center;justify-content:center;color:#fff4de;text-align:center;padding:12px;font-size:12px;line-height:1.3;transition:transform .25s ease,filter .25s ease}
+.wish-lantern:hover{transform:translateY(-6px) scale(1.03);filter:brightness(1.07)}
+.wish-lantern:after{content:"";position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);height:18px;border-left:1px solid rgba(255,235,180,.9)}
+
+.finale{overflow:hidden;text-align:center}
+.finale .moon-center{position:absolute;left:50%;top:7%;transform:translateX(-50%);width:min(68vw,640px);aspect-ratio:1;border-radius:50%;background:
+  radial-gradient(circle at 36% 34%,#fff8d8 0 10%,#ffe7a9 35%,#f5c16c 67%,#a56231 100%),
+  radial-gradient(circle at 60% 24%,rgba(148,132,255,.18),transparent 26%),
+  radial-gradient(circle at 24% 74%,rgba(255,122,168,.16),transparent 24%);
+  box-shadow:0 0 60px rgba(255,218,146,.45),0 0 160px rgba(130,124,255,.16),0 0 140px rgba(255,218,146,.18);opacity:.84}
+.final-card{position:relative;z-index:2;width:min(940px,100%);padding:50px 28px;border-radius:36px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(180deg,rgba(14,20,38,.58),rgba(10,14,29,.48));backdrop-filter:blur(16px);box-shadow:var(--shadow)}
+.final-card h2{margin:16px 0 14px;font-size:clamp(42px,7vw,86px);line-height:1.04;font-weight:500}
+.final-card p{margin:0 auto 26px;max-width:780px;font-size:clamp(17px,2.2vw,23px);line-height:1.9;color:#e8e1d5}
+.signature{font-size:30px;font-style:italic;color:#ffdca2;font-family:Georgia,"Times New Roman",serif}
+.love-pulse{display:inline-block;margin-left:8px;color:#ff93be;animation:pulseHeart 1.6s ease-in-out infinite}
+@keyframes pulseHeart{50%{transform:scale(1.18)}}
+.footerline{padding:24px 20px 60px;text-align:center;color:#cfc7ba;font-size:13px;letter-spacing:.05em}
+
+.modal,.lightbox{position:fixed;inset:0;z-index:160;display:none;place-items:center;padding:18px;background:rgba(2,4,10,.82);backdrop-filter:blur(12px)}
+.modal.open,.lightbox.open{display:grid}
+.sheet{width:min(760px,100%);max-height:88vh;overflow:auto;position:relative;background:linear-gradient(180deg,#fffaf0,#f3e6cf);color:#3c3026;border-radius:26px;padding:34px 26px 38px;box-shadow:0 28px 90px rgba(0,0,0,.48)}
+.sheet h3{margin:0 0 18px;font-size:36px;font-weight:500}.sheet p{margin:0 0 12px;font-size:17px;line-height:1.9}
+.close{position:absolute;right:12px;top:10px;width:40px;height:40px;border:none;border-radius:999px;background:rgba(0,0,0,.06);cursor:pointer;font-size:26px;color:#5b4a3c}
+.lightbox figure{margin:0;position:relative;max-width:min(1000px,100%);max-height:92vh}.lightbox img{max-width:100%;max-height:92vh;border-radius:24px;box-shadow:0 28px 90px rgba(0,0,0,.56)}.lightbox figcaption{margin-top:10px;text-align:center;color:#f4ead7;font-size:14px;line-height:1.6}
+.hide-mobile{display:inline}
+
+@media (max-width:980px){.two-col,.promise,.wishes{grid-template-columns:1fr}.figure,.tall{min-height:64svh}.wish-cloud{min-height:440px}.grid{grid-template-columns:1fr}.span-7,.span-5,.span-6,.span-4,.span-8{grid-column:auto;min-height:280px}}
+@media (max-width:760px){nav{padding:12px 14px}.dots{display:none}.hero{padding-top:108px}.hero-moon{right:-28vw;top:13vh;width:72vw}.copy{padding:26px}.copy h2{font-size:clamp(32px,11vw,56px)}.polaroid{width:min(78vw,280px)}.t-row{grid-template-columns:1fr;gap:8px;padding:18px}.wish-lantern{width:82px;height:112px}.finale .moon-center{width:90vw;top:10%}.hide-mobile{display:none}.orbit-heart{right:10vw;top:17vh;transform-origin:110px 80px}}
+</style>
+</head>
+<body class="lock">
+<canvas id="stars"></canvas>
+<div class="galaxy-clouds"></div>
+<div class="aurora"></div>
+<div class="mist"></div>
+<div class="shooting-stars"><i></i><i></i><i></i><i></i></div>
+<div class="hearts-layer" id="heartsLayer"></div>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<div class="overlay" id="overlay">
+  <div class="envelope reveal in">
+    <div class="tag">Galaxy love · Trung thu dành cho em</div>
+    <h1 class="serif">Một đêm có trăng,<br>có trái tim, có cả dải ngân hà của riêng mình.</h1>
+    <p>Anh muốn phiên bản này lãng mạn hơn một chút — có hiệu ứng trái tim, có bầu trời galaxy, có những ánh sáng lấp lánh như thể tình yêu của mình đang trôi trong một khoảng trời rất riêng. Nếu em sẵn sàng, mình cùng mở món quà này nhé.</p>
+    <div class="enter-row">
+      <button class="moon-btn" id="enterMoon" aria-label="Mở web"></button>
+      <button class="pill" id="enterBtn">Mở món quà ✦</button>
+      <button class="pill secondary" id="skipIntro">Xem ngay</button>
+    </div>
+    <div class="intro-note">Gợi ý: chạm vào ảnh để phóng to · chạm đèn lồng để mở lời nhắn · ở phiên bản này, tim và galaxy đi cùng nhau.</div>
+  </div>
+</div>
+
+<nav>
+  <div class="brand"><b>Trung thu · tình yêu</b><span>Version 4 · Heart & Galaxy</span></div>
+  <div class="nav-actions">
+    <button class="small-btn" id="audioBtn">♫ Âm thanh</button>
+    <button class="small-btn" id="heartBtn">💗 Trái tim</button>
+    <a class="small-btn" href="#finale">Lời cuối</a>
+  </div>
+</nav>
+
+<div class="dots" id="dots">
+  <a href="#hero" data-section="hero"></a>
+  <a href="#chapter1" data-section="chapter1"></a>
+  <a href="#chapter2" data-section="chapter2"></a>
+  <a href="#chapter3" data-section="chapter3"></a>
+  <a href="#chapter4" data-section="chapter4"></a>
+  <a href="#chapter5" data-section="chapter5"></a>
+  <a href="#finale" data-section="finale"></a>
+</div>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="hero-bg" data-parallax=".14"></div>
+    <div class="hero-moon" data-parallax=".06"></div>
+    <div class="orbit-heart"></div>
+    <div class="lanterns"><i class="lantern"></i><i class="lantern"></i><i class="lantern"></i><i class="lantern"></i><i class="lantern"></i></div>
+    <div class="hero-copy reveal">
+      <div class="eyebrow">Một mùa trăng dành cho hai chúng ta</div>
+      <h1 class="serif">Giữa bầu trời galaxy,<br>anh vẫn chỉ nhìn về em.</h1>
+      <p>Trước đây, Trung thu với anh chỉ là một đêm có trăng. Từ khi có em, nó bắt đầu có thêm một nhịp tim để nhớ, một ánh mắt để thương, và một khoảng trời riêng mà ở đó, giữa rất nhiều vì sao, điều anh nhìn thấy rõ nhất vẫn luôn là em.</p>
+      <div class="hero-actions">
+        <a class="pill" href="#chapter1">Bắt đầu câu chuyện</a>
+        <a class="pill secondary" href="#chapter4">Đi đến lời hứa</a>
+      </div>
+    </div>
+    <div class="scroll-badge">Cuộn xuống để đi tiếp</div>
+  </section>
+
+  <section id="chapter1">
+    <div class="wrap two-col panel reveal">
+      <div class="copy">
+        <div class="eyebrow">Chương I · Khi một người bước vào vũ trụ của anh</div>
+        <h2 class="serif">Có một người khiến cả những ngày bình thường cũng trở nên có ánh sáng.</h2>
+        <p>Không cần một khởi đầu quá rực rỡ. Chỉ là một lần nhìn nhau lâu hơn một chút, một lần thấy tim mềm đi khi nghe em nói, một lần muốn giữ lại khoảnh khắc bên cạnh em. Và rồi chẳng biết từ lúc nào, những điều nhỏ bé ấy lại trở thành cả một khoảng trời dịu dàng mà anh không muốn đánh mất.</p>
+      </div>
+      <div class="figure card photo" data-full="assets/denim.jpg" data-caption="Từ một lần đứng cạnh nhau, thành một điều anh muốn giữ thật lâu.">
+        <img src="assets/denim.jpg" alt="Hai người bên nhau" />
+        <div class="figure-note"><b class="serif">Từ “anh và em” thành “chúng ta”.</b>Giữa hàng triệu khoảnh khắc, anh vẫn thấy khoảnh khắc có em ở cạnh là điều đáng nhớ nhất.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chapter2">
+    <div class="wrap">
+      <div class="panel quote-block reveal">
+        <div class="quote-mark serif">“</div>
+        <h2 class="serif">Nếu trái tim có quỹ đạo riêng, chắc nó sẽ cứ xoay quanh em mãi.</h2>
+        <p>Em đến rất nhẹ, nhưng lại khiến mọi thứ trong anh thay đổi. Giống như một vì sao xuất hiện đúng lúc, đủ để bầu trời vốn im lặng cũng bắt đầu lấp lánh.</p>
+      </div>
+      <div class="polaroids reveal">
+        <div class="polaroid" style="--r:-5deg" data-full="assets/solo_soft.jpg" data-caption="Em — dịu dàng như một mảnh trăng mềm."><img src="assets/solo_soft.jpg" alt="Chân dung dịu dàng"><b>Ánh nhìn đầu tiên</b><span>Một vẻ dịu dàng khiến cả buổi tối bỗng chậm lại.</span></div>
+        <div class="polaroid" style="--r:4deg" data-full="assets/white_dress.jpg" data-caption="Một nụ cười làm lòng người mềm đi."><img src="assets/white_dress.jpg" alt="Cô gái mặc váy trắng"><b>Nụ cười của em</b><span>Giống một đốm sáng nhỏ, nhưng đủ làm ấm cả một ngày dài.</span></div>
+        <div class="polaroid" style="--r:-3deg" data-full="assets/glasses.jpg" data-caption="Một phiên bản rất thanh lịch và cuốn hút của em."><img src="assets/glasses.jpg" alt="Em đeo kính"><b>Rất cuốn hút</b><span>Nhẹ nhàng thôi, nhưng làm người ta muốn ngắm lâu hơn một chút.</span></div>
+        <div class="polaroid" style="--r:6deg" data-full="assets/solo_sky.jpg" data-caption="Em dưới bầu trời trong, nhẹ nhàng mà rạng rỡ."><img src="assets/solo_sky.jpg" alt="Em dưới bầu trời xanh"><b>Một ngày rất xanh</b><span>Và em là điều đẹp nhất trong bức trời ấy.</span></div>
+      </div>
+      <div class="grid reveal">
+        <div class="card photo span-7" data-full="assets/sunset.jpg" data-caption="Một buổi chiều có em, nên ánh hoàng hôn cũng dịu hơn."><img src="assets/sunset.jpg" alt="Hoàng hôn bên nhau"><div class="caption">Có những buổi chiều đẹp vì ánh nắng. Còn buổi chiều này đẹp vì có em.</div></div>
+        <div class="card text-card span-5"><h3 class="serif">Em đến rất nhẹ, nhưng ở lại rất sâu.</h3><p>Tình yêu đôi khi không bắt đầu bằng điều gì thật lớn. Nó chỉ bắt đầu bằng việc mình muốn nghe một người kể thêm vài câu chuyện vu vơ, muốn nhìn thêm vài nụ cười, và muốn giữ người ấy ở gần thêm một chút.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chapter3">
+    <div class="wrap two-col">
+      <div class="panel reveal" style="padding:10px">
+        <div class="timeline">
+          <div class="t-row"><div class="t-num">01 · Gặp gỡ</div><div><h3 class="serif">Từ một ánh nhìn</h3><p>Có những khởi đầu không cần quá ồn ào. Chỉ cần một lần tim thấy yên bình khi ở cạnh một người, thế là đủ để mọi điều bắt đầu.</p></div></div>
+          <div class="t-row"><div class="t-num">02 · Ở cạnh nhau</div><div><h3 class="serif">Từ “hôm nay” đến “những ngày sau”</h3><p>Những bức ảnh này không chỉ giữ lại gương mặt. Chúng giữ lại cảm giác của một thời điểm mà hai người đã thật sự có mặt trong cuộc đời nhau.</p></div></div>
+          <div class="t-row"><div class="t-num">03 · Mong ước</div><div><h3 class="serif">Từ mùa trăng này đến rất nhiều mùa trăng nữa</h3><p>Anh không cần một Trung thu hoàn hảo. Anh chỉ mong sau này, mỗi lần ngẩng đầu nhìn trăng và nhìn lên dải ngân hà, người ở cạnh anh vẫn là em.</p></div></div>
+        </div>
+      </div>
+      <div class="panel reveal" style="padding:14px">
+        <div class="grid" style="margin-top:0">
+          <div class="card photo span-8" style="grid-column:1/-1;min-height:330px" data-full="assets/flowers.jpg" data-caption="Mang theo một bó hoa, như mang theo cả một lời thương."><img src="assets/flowers.jpg" alt="Mang hoa đến gặp em"><div class="caption">Mang theo một bó hoa, như mang theo cả một lời thương.</div></div>
+          <div class="card photo span-4" data-full="assets/mirror.jpg" data-caption="Một khoảnh khắc đời thường, nhưng lại rất đáng thương."><img src="assets/mirror.jpg" alt="Chụp ảnh cùng nhau"><div class="caption">Rất đời thường, nhưng lại rất đáng nhớ.</div></div>
+          <div class="card photo span-4" data-full="assets/cuddle.jpg" data-caption="Một nơi để dựa vào, một nơi để bình yên."><img src="assets/cuddle.jpg" alt="Khoảnh khắc gần gũi"><div class="caption">Ở cạnh nhau là đủ bình yên.</div></div>
+          <div class="card photo span-4" data-full="assets/mirror2.jpg" data-caption="Một ánh nhìn rất gần, rất ấm."><img src="assets/mirror2.jpg" alt="Khoảnh khắc gần nhau"><div class="caption">Một ánh nhìn rất gần, rất ấm.</div></div>
+          <div class="card photo span-6" data-full="assets/solo_room.jpg" data-caption="Em trong một buổi tối yên tĩnh, nhẹ như đêm trăng."><img src="assets/solo_room.jpg" alt="Chân dung trong phòng"><div class="caption">Một vẻ đẹp dịu dàng, yên như một đêm trăng sáng.</div></div>
+          <div class="card photo span-6" data-full="assets/embrace.jpg" data-caption="Một khoảnh khắc rất gần, rất ấm."><img src="assets/embrace.jpg" alt="Khoảnh khắc ôm nhau"><div class="caption">Chỉ một cái ôm thôi, mà đủ làm mọi ồn ào dịu xuống.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chapter4">
+    <div class="wrap">
+      <div class="copy panel reveal" style="text-align:center;margin-bottom:24px">
+        <div class="eyebrow">Chương IV · Một lời hứa dưới trăng và giữa dải ngân hà</div>
+        <h2 class="serif">Từ người anh thương… thành người anh muốn gọi là gia đình.</h2>
+        <p>Một chiếc nhẫn không hứa rằng mọi ngày đều hoàn hảo. Nó chỉ hứa một điều giản dị hơn rất nhiều: dù ngày nào đến, anh vẫn muốn cùng em đi tiếp. Đi qua những buổi tối yên bình, đi qua những ngày nhiều giông gió, và đi đến một nơi mà khi nhìn lại, mình biết đã thật lòng chọn nhau.</p>
+      </div>
+      <div class="promise reveal">
+        <div class="figure card photo tall" data-full="assets/ring.jpg" data-caption="Một lời hứa bắt đầu bằng chiếc nhẫn nhỏ nhưng rất chân thành.">
+          <div class="badge">Khoảnh khắc cầu hôn</div>
+          <img src="assets/ring.jpg" alt="Trao nhẫn" />
+          <div class="ring-glow"></div>
+          <div class="figure-note"><b class="serif">Một chiếc nhẫn.</b>Không phải để hứa rằng sẽ không có ngày khó khăn, mà để hứa rằng mình sẽ không buông tay nhau.</div>
+        </div>
+        <div class="figure card photo tall" data-full="assets/wedding_white.jpg" data-caption="Một bức hình cưới, như một giấc mơ rất dịu dàng.">
+          <div class="badge">Giấc mơ về một mái nhà</div>
+          <img src="assets/wedding_white.jpg" alt="Ảnh cưới sáng" />
+          <div class="figure-note"><b class="serif">Một mái nhà.</b>Một nơi có tiếng cười của em, có nhiều mùa Trung thu không còn phải ước “giá như”.</div>
+        </div>
+      </div>
+      <div class="grid reveal" style="margin-top:18px">
+        <div class="card photo span-6" data-full="assets/wedding_dark.jpg" data-caption="Cùng nhau bước vào ánh sáng của một hành trình mới."><img src="assets/wedding_dark.jpg" alt="Ảnh cưới tối"><div class="caption">Và sau lời hứa, là một hành trình mới rất đẹp.</div></div>
+        <div class="card text-card span-6"><h3 class="serif">Anh chọn em, không chỉ cho hôm nay.</h3><p>Anh chọn em cho những ngày vui. Chọn em cho cả những lúc mỏi mệt. Chọn em cho những bữa cơm rất thường, cho những chuyến đi ngắn, cho những buổi tối nhìn nhau im lặng mà vẫn thấy yên lòng. Và nếu có thể, anh muốn chọn em cho thật nhiều mùa trăng phía trước.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chapter5">
+    <div class="wrap wishes">
+      <div class="wish-note panel reveal">
+        <small>Chạm vào từng đèn lồng</small>
+        <h3 class="serif">Những điều anh muốn nói với em trong đêm Trung thu này.</h3>
+        <p>Có những câu không cần dài. Chỉ cần thật lòng là đủ. Mỗi chiếc đèn lồng là một lời nhắn nhỏ anh gửi cho em — những điều bình thường thôi, nhưng là những điều anh thật sự nghĩ khi ngồi giữa bầu trời có trăng và nhớ đến em.</p>
+        <div class="note-box" id="wishOutput">“Trung thu đẹp nhất là khi ánh trăng có em đứng bên cạnh.”</div>
+      </div>
+      <div class="wish-cloud panel reveal">
+        <button class="wish-lantern" style="left:8%;top:14%" data-note="Anh mong sau này, mỗi mùa trăng đều có một chỗ dành riêng cho em trong cuộc đời anh.">Mùa trăng sau</button>
+        <button class="wish-lantern" style="left:38%;top:8%" data-note="Điều anh thích nhất không phải là trăng sáng thế nào, mà là em đã xuất hiện trong đêm có trăng ấy.">Ánh sáng</button>
+        <button class="wish-lantern" style="left:70%;top:18%" data-note="Nếu được ước một điều, anh sẽ ước những câu chuyện vu vơ của em đừng bao giờ biến mất khỏi những buổi tối của anh.">Vu vơ</button>
+        <button class="wish-lantern" style="left:16%;top:48%" data-note="Anh muốn có một đêm Trung thu thật bình thường thôi: ngồi cạnh em, nhìn trăng, và thấy như thế là đủ.">Rất đủ</button>
+        <button class="wish-lantern" style="left:50%;top:44%" data-note="Có những món quà không cần gói bằng giấy, chỉ cần gói bằng thời gian ở cạnh nhau là đã rất quý rồi.">Món quà</button>
+        <button class="wish-lantern" style="left:72%;top:56%" data-note="Anh hy vọng thật nhiều mùa trăng phía trước, mình vẫn còn đủ dịu dàng để nhìn nhau như hôm nay.">Phía trước</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="finale" id="finale">
+    <div class="moon-center" data-parallax=".04"></div>
+    <div class="lanterns"><i class="lantern"></i><i class="lantern"></i><i class="lantern"></i><i class="lantern"></i></div>
+    <div class="final-card reveal">
+      <div class="eyebrow">Khép lại món quà</div>
+      <h2 class="serif">Dù là dưới ánh trăng,<br class="hide-mobile">hay giữa cả galaxy, anh vẫn muốn có em.</h2>
+      <p>Không chỉ là đêm nay. Không chỉ là một mùa trăng. Anh muốn giữ những bức ảnh này như giữ một đoạn đường đẹp trong tim — nơi có em, có những điều dịu dàng, có lời hứa, có nhịp tim rung lên thật khẽ, và có niềm mong rằng chúng ta còn thật nhiều mùa trăng phía trước. Giữa rất nhiều ngôi sao, anh vẫn thấy người anh muốn đi cùng nhất chính là em.</p>
+      <div class="signature">My × Tuấn <span class="love-pulse">❤</span></div>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px">
+        <button class="pill" id="openLetter">Mở lá thư cuối ✉</button>
+        <a class="pill secondary" href="#hero">Xem lại từ đầu</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="footerline">Một web động Trung thu lồng ghép tình yêu · Version 4 Heart & Galaxy</div>
+
+<div class="modal" id="letterModal">
+  <div class="sheet">
+    <button class="close" id="closeLetter">×</button>
+    <h3 class="serif">Gửi em, giữa bầu trời đầy sao…</h3>
+    <p>Em à, nếu có ai hỏi anh Trung thu đẹp nhất là khi nào, chắc anh sẽ không nói về một năm cụ thể.</p>
+    <p>Với anh, Trung thu đẹp nhất là khi có một người khiến mình muốn giữ lại ánh trăng lâu hơn một chút, nhìn bầu trời lâu hơn một chút, và sống dịu dàng hơn một chút. Và người đó là em.</p>
+    <p>Anh không biết tương lai sẽ có bao nhiêu ngày dễ dàng, bao nhiêu ngày mình phải cố gắng. Nhưng anh biết có một điều rất giản dị: anh muốn những ngày ấy có em ở cạnh.</p>
+    <p>Nếu sau này chúng ta có một mái nhà, anh mong mỗi mùa Trung thu mình vẫn dành một buổi tối cho nhau. Không cần nơi thật đẹp, không cần món quà thật lớn. Chỉ cần hai đứa ngồi cạnh nhau, nhìn trăng, nhìn sao, kể cho nhau nghe vài câu chuyện nhỏ, và nhớ rằng đã có một đêm anh từng rất chân thành nói với em rằng…</p>
+    <p class="serif" style="font-size:24px"><em>“Anh muốn ngắm thật nhiều mùa trăng, thật nhiều bầu trời, cùng em.”</em></p>
+    <p style="text-align:right;margin-top:24px">— Tuấn</p>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <figure>
+    <button class="close" id="closeLightbox">×</button>
+    <img id="lightboxImg" alt="Ảnh phóng to" />
+    <figcaption id="lightboxCap"></figcaption>
+  </figure>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const overlay = $('#overlay');
+function startExperience(){
+  overlay.classList.add('hidden');
+  document.body.classList.remove('lock');
+  setTimeout(() => overlay.style.display = 'none', 950);
+  $('#hero').scrollIntoView({behavior:'smooth'});
+  if(heartsEnabled) startHeartLoop();
+}
+$('#enterBtn').onclick = startExperience;
+$('#skipIntro').onclick = startExperience;
+$('#enterMoon').onclick = startExperience;
+
+const progress = $('#progress');
+const parallaxEls = $$('[data-parallax]');
+const sections = $$('main section[id]');
+const dotLinks = $$('#dots a');
+function updateScroll(){
+  const d = document.documentElement;
+  const max = d.scrollHeight - d.clientHeight;
+  progress.style.width = (max > 0 ? (d.scrollTop / max) * 100 : 0) + '%';
+  parallaxEls.forEach(el => {
+    const speed = parseFloat(el.dataset.parallax || 0);
+    const base = el.classList.contains('hero-bg') ? ' scale(1.06)' : '';
+    el.style.transform = `translateY(${window.scrollY * speed}px)${base}`;
+  });
+  let active = sections[0]?.id;
+  const probe = window.scrollY + window.innerHeight * .45;
+  sections.forEach(sec => { if (probe >= sec.offsetTop) active = sec.id; });
+  dotLinks.forEach(a => a.classList.toggle('active', a.dataset.section === active));
+}
+addEventListener('scroll', updateScroll, {passive:true});
+updateScroll();
+
+const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+  if (entry.isIntersecting) entry.target.classList.add('in');
+}), {threshold:.13});
+$$('.reveal').forEach(el => observer.observe(el));
+
+const canvas = $('#stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize(){
+  canvas.width = innerWidth * devicePixelRatio;
+  canvas.height = innerHeight * devicePixelRatio;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  stars = Array.from({length: Math.min(240, Math.floor(innerWidth * innerHeight / 4800))}, () => ({
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    r: Math.random() * 1.8 + .25,
+    a: Math.random() * .72 + .18,
+    s: (Math.random() * .014 + .003) * (Math.random() > .5 ? 1 : -1),
+    c: ['#fff8e4','#ffdff0','#d9ecff'][Math.floor(Math.random()*3)]
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(const st of stars){
+    st.a += st.s;
+    if(st.a > 1 || st.a < .18) st.s *= -1;
+    ctx.globalAlpha = st.a;
+    ctx.fillStyle = st.c;
+    ctx.beginPath();
+    ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+resize(); draw(); addEventListener('resize', resize);
+
+const lightbox = $('#lightbox');
+const lbImg = $('#lightboxImg');
+const lbCap = $('#lightboxCap');
+function openLightbox(src, cap=''){
+  lbImg.src = src;
+  lbCap.textContent = cap || '';
+  lightbox.classList.add('open');
+}
+$$('[data-full]').forEach(el => el.addEventListener('click', () => openLightbox(el.dataset.full, el.dataset.caption || '')));
+$('#closeLightbox').onclick = () => lightbox.classList.remove('open');
+lightbox.addEventListener('click', e => { if(e.target === lightbox) lightbox.classList.remove('open'); });
+
+const wishOutput = $('#wishOutput');
+$$('.wish-lantern').forEach(btn => btn.addEventListener('click', () => {
+  wishOutput.textContent = '“' + btn.dataset.note + '”';
+}));
+
+const letterModal = $('#letterModal');
+$('#openLetter').onclick = () => letterModal.classList.add('open');
+$('#closeLetter').onclick = () => letterModal.classList.remove('open');
+letterModal.addEventListener('click', e => { if(e.target === letterModal) letterModal.classList.remove('open'); });
+
+let audioCtx, notes = [], audioOn = false;
+function stopAudio(){
+  notes.forEach(n => { try{ n.stop(); } catch(e){} });
+  notes = [];
+  audioOn = false;
+  $('#audioBtn').textContent = '♫ Âm thanh';
+}
+function startAudio(){
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain();
+  master.gain.value = .022;
+  master.connect(audioCtx.destination);
+  [220,329.63,392,440].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.value = i === 1 ? .18 : .11;
+    osc.connect(gain); gain.connect(master); osc.start(); notes.push(osc);
+  });
+  audioOn = true;
+  $('#audioBtn').textContent = 'Tắt âm';
+}
+$('#audioBtn').onclick = () => audioOn ? stopAudio() : startAudio();
+
+// hearts
+const heartsLayer = $('#heartsLayer');
+let heartsEnabled = true;
+let heartTimer = null;
+function spawnHeart(){
+  const h = document.createElement('div');
+  h.className = 'heart-float';
+  h.textContent = ['❤','❤','💗','💖','💞'][Math.floor(Math.random()*5)];
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.setProperty('--drift', (Math.random()*140 - 70) + 'px');
+  h.style.setProperty('--scale', (.8 + Math.random()*1.4).toFixed(2));
+  h.style.animationDuration = (10 + Math.random()*8).toFixed(2) + 's';
+  h.style.fontSize = (16 + Math.random()*16).toFixed(0) + 'px';
+  heartsLayer.appendChild(h);
+  setTimeout(() => h.remove(), 19000);
+}
+function startHeartLoop(){
+  if(heartTimer) return;
+  for(let i=0;i<8;i++) setTimeout(spawnHeart, i*400);
+  heartTimer = setInterval(spawnHeart, 850);
+}
+function stopHeartLoop(){
+  clearInterval(heartTimer);
+  heartTimer = null;
+  heartsLayer.innerHTML = '';
+}
+$('#heartBtn').onclick = () => {
+  heartsEnabled = !heartsEnabled;
+  $('#heartBtn').textContent = heartsEnabled ? '💗 Trái tim' : '🤍 Bật tim';
+  if(heartsEnabled && overlay.classList.contains('hidden')) startHeartLoop();
+  else stopHeartLoop();
+};
+
+addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    letterModal.classList.remove('open');
+    lightbox.classList.remove('open');
+  }
+});
+
+setTimeout(() => document.querySelector('.hero-copy').classList.add('in'), 200);
+</script>
+</body>
+</html>
