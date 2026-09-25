@@ -6,7 +6,8 @@
 <title>Trái Tim Ngân Hà – Gửi Em</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+<!-- Preload nhạc nền chính của trang galaxy -->
+<link rel="preload" as="audio" href="./nhac_trung_thu.mp3" type="audio/mpeg">
 <!-- Tải trước trang và file nhạc để chuyển cảnh tức thì -->
 <link rel="prefetch" href="./love_letter_transition.html">
 <link rel="prefetch" href="./thegioicuaanh.mp3" as="audio">
@@ -145,102 +146,84 @@
 </div>
 <a id="autoNext" href="./love_letter_transition.html" style="display:none"></a>
 <script>
-/* Romantic Mid-Autumn music box audio — copied from demo */
-let synth=null,fxSynth=null,fxReverb=null,musicPart=null,isMusicPlaying=false;
-let fallbackCtx=null,fallbackTimer=null,fallbackStep=0;
-const melody=[
-  {time:'0:0',note:'C4',dur:'4n'},{time:'0:1',note:'E4',dur:'4n'},{time:'0:2',note:'G4',dur:'4n'},{time:'0:3',note:'A4',dur:'4n'},
-  {time:'1:0',note:'G4',dur:'2n'},{time:'1:2',note:'E4',dur:'4n'},{time:'1:3',note:'C4',dur:'4n'},
-  {time:'2:0',note:'D4',dur:'4n'},{time:'2:1',note:'E4',dur:'4n'},{time:'2:2',note:'D4',dur:'2n'},
-  {time:'3:0',note:'C4',dur:'4n'},{time:'3:1',note:'D4',dur:'4n'},{time:'3:2',note:'E4',dur:'4n'},{time:'3:3',note:'G4',dur:'4n'},
-  {time:'4:0',note:'A4',dur:'2n'},{time:'4:2',note:'C5',dur:'2n'}
-];
-async function initAudio(){
-  if(synth || fallbackCtx) return;
-  if(typeof Tone!=='undefined'){
-    try{
-      await Tone.start();
-      const reverb=new Tone.Reverb({decay:3.2,wet:.45}).toDestination();
-      fxReverb=new Tone.Reverb({decay:2.8,wet:.55}).toDestination();
-      synth=new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:.02,decay:.7,sustain:.15,release:1.2}}).connect(reverb);
-      fxSynth=new Tone.PolySynth(Tone.Synth,{oscillator:{type:'triangle'},envelope:{attack:.003,decay:.16,sustain:.02,release:.65}}).connect(fxReverb);
-      synth.volume.value=-9;
-      fxSynth.volume.value=-17;
-      musicPart=new Tone.Part((time,value)=>synth.triggerAttackRelease(value.note,value.dur,time),melody);
-      musicPart.loop=true;
-      musicPart.loopEnd='5:0';
-      Tone.Transport.bpm.value=78;
-      return;
-    }catch(e){console.warn('Tone.js unavailable, using WebAudio fallback',e)}
+/* Background Music (nhac_trung_thu.mp3) & Web Audio Sound FX */
+const bgMusic = new Audio();
+bgMusic.src = './nhac_trung_thu.mp3';
+bgMusic.loop = true;
+bgMusic.preload = 'auto';
+bgMusic.volume = 0.35;
+let isMusicPlaying = false;
+
+let fallbackCtx = null;
+function getAudioContext() {
+  if (!fallbackCtx) {
+    fallbackCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  try{
-    fallbackCtx=new (window.AudioContext||window.webkitAudioContext)();
-    if(fallbackCtx.state==='suspended') await fallbackCtx.resume();
-  }catch(e){console.warn('Audio unavailable',e)}
+  if (fallbackCtx.state === 'suspended') {
+    fallbackCtx.resume();
+  }
+  return fallbackCtx;
 }
-function fallbackPlayNote(note='C4',gain=.035,dur=.42){
-  if(!fallbackCtx)return;
-  const map={C4:261.63,D4:293.66,E4:329.63,G4:392,A4:440,C5:523.25,E5:659.25,G5:783.99,C6:1046.5,E6:1318.5,G6:1568,B6:1975.5,A6:1760,C7:2093,D6:1174.7};
-  const f=map[note]||440,t=fallbackCtx.currentTime;
-  const o=fallbackCtx.createOscillator(),g=fallbackCtx.createGain();
-  o.type='sine';o.frequency.value=f;
-  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain,t+.018);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-  o.connect(g);g.connect(fallbackCtx.destination);o.start(t);o.stop(t+dur+.04);
-}
-function startFallbackMusic(){
-  if(!fallbackCtx||fallbackTimer)return;
-  const seq=['C4','E4','G4','A4','G4','G4','E4','C4','D4','E4','D4','D4','C4','D4','E4','G4','A4','A4','C5','C5'];
-  fallbackStep=0; fallbackPlayNote(seq[0],.028,.48);
-  const ms=60000/78;
-  fallbackTimer=setInterval(()=>{fallbackStep=(fallbackStep+1)%seq.length;fallbackPlayNote(seq[fallbackStep],.028,.48)},ms);
-}
-function stopFallbackMusic(){if(fallbackTimer){clearInterval(fallbackTimer);fallbackTimer=null}}
 
 function syncMusicUi(){
-  const btn=document.getElementById('musicBtn'),text=document.getElementById('musicText');
-  if(!btn||!text)return;
-  btn.classList.toggle('playing',isMusicPlaying);
-  text.textContent=isMusicPlaying?'Đang phát':'Nhạc nền';
+  const btn = document.getElementById('musicBtn');
+  const text = document.getElementById('musicText');
+  if(!btn || !text) return;
+  btn.classList.toggle('playing', isMusicPlaying);
+  text.textContent = isMusicPlaying ? 'Đang phát' : 'Nhạc nền';
 }
+
 async function toggleMusicPlay(){
-  await initAudio();
+  getAudioContext();
   if(!isMusicPlaying){
-    if(musicPart && typeof Tone!=='undefined'){
-      try{
-        await Tone.start();
-        Tone.Transport.stop();
-        Tone.Transport.position=0;
-        musicPart.stop();
-        musicPart.start(0);
-        Tone.Transport.start('+0.03');
-      }catch(e){console.warn('Tone playback failed',e)}
-    }else if(fallbackCtx){
-      if(fallbackCtx.state==='suspended') await fallbackCtx.resume();
-      startFallbackMusic();
+    try {
+      await bgMusic.play();
+      isMusicPlaying = true;
+    } catch(e) {
+      console.warn('Không thể phát nhạc tự động:', e);
+      isMusicPlaying = false;
     }
-    isMusicPlaying=true;
-  }else{
-    if(musicPart && typeof Tone!=='undefined'){
-      try{musicPart.stop();Tone.Transport.stop();Tone.Transport.position=0}catch(e){}
-    }
-    stopFallbackMusic();
-    isMusicPlaying=false;
+  } else {
+    bgMusic.pause();
+    isMusicPlaying = false;
   }
   syncMusicUi();
 }
-function playChimeNote(note='E5'){if(synth){try{synth.triggerAttackRelease(note,'16n',undefined,.35);return}catch(e){}} if(fallbackCtx)fallbackPlayNote(note,.045,.3)}
-function playStarShimmer(idx=0,delay=0){
-  if(!fxSynth && !fallbackCtx)return;
+
+async function initAudio(){
+  getAudioContext();
+}
+
+function fallbackPlayNote(note='C4', gain=.035, dur=.42){
+  const ctx = getAudioContext();
+  if(!ctx) return;
+  const map={C4:261.63,D4:293.66,E4:329.63,G4:392,A4:440,C5:523.25,E5:659.25,G5:783.99,C6:1046.5,E6:1318.5,G6:1568,B6:1975.5,A6:1760,C7:2093,D6:1174.7};
+  const f=map[note]||440, t=ctx.currentTime;
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type='sine'; o.frequency.value=f;
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.exponentialRampToValueAtTime(gain, t+.018);
+  g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t); o.stop(t+dur+.04);
+}
+
+function playChimeNote(note='E5'){
+  fallbackPlayNote(note, .055, .35);
+}
+
+function playStarShimmer(idx=0, delay=0){
   const pairs=[['E6','G6'],['G6','B6'],['A6','C7'],['D6','A6']];
   const notes=pairs[idx%pairs.length];
   window.setTimeout(()=>{
     try{
-      if(fxSynth){fxSynth.triggerAttackRelease(notes,'32n',undefined,.18);window.setTimeout(()=>{try{fxSynth.triggerAttackRelease([notes[1],notes[0]],'64n',undefined,.11)}catch(e){}},82)}
-      else{fallbackPlayNote(notes[0],.018,.16);window.setTimeout(()=>fallbackPlayNote(notes[1],.014,.14),82)}
+      fallbackPlayNote(notes[0], .018, .16);
+      window.setTimeout(()=>fallbackPlayNote(notes[1], .014, .14), 82);
     }catch(e){}
-  },delay);
+  }, delay);
 }
-document.getElementById('musicBtn').addEventListener('click',toggleMusicPlay);
+
+document.getElementById('musicBtn').addEventListener('click', toggleMusicPlay);
 
 const heartPoints=[{x:200,y:112},{x:152,y:60},{x:102,y:65},{x:56,y:110},{x:38,y:175},{x:58,y:245},{x:118,y:308},{x:200,y:372},{x:282,y:308},{x:342,y:245},{x:362,y:175},{x:344,y:110},{x:298,y:65},{x:248,y:60},{x:200,y:112}];
 const NS='http://www.w3.org/2000/svg';
@@ -579,6 +562,16 @@ function maybeAdvanceTimeline(){while(angle-lastTimelineTurn>=Math.PI*2){lastTim
 function orbitTick(now){const dt=Math.min(40,now-last);last=now;if(!drag&&orbitIntroDone)angle+=dt*.00023;const rect=orbit.getBoundingClientRect(),rx=Math.min(rect.width*.41,245),ry=Math.min(rect.height*.42,225);let introT=orbitIntroDone?1:(orbitIntroActive?Math.min(1,(now-orbitIntroStart)/1650):0);let introEase=orbitIntroActive?easeOutBack(introT):0;if(orbitIntroActive&&introT>=1){orbitIntroActive=false;orbitIntroDone=true;introEase=1;}if(orbitIntroDone)maybeAdvanceTimeline();cards.forEach((el,i)=>{const a=angle+i*Math.PI*2/cards.length,targetX=Math.cos(a)*rx,targetY=Math.sin(a)*ry,depth=(targetY+ry)/(2*ry),targetScale=.72+depth*.48,targetBlur=(1-depth)*4.3,targetOpacity=.4+depth*.6;let x=targetX,y=targetY,scale=targetScale,blur=targetBlur,opacity=targetOpacity;if(!orbitIntroDone){const start=orbitLaunchPoints[i]||{x:0,y:0};x=start.x+(targetX-start.x)*introEase;y=start.y+(targetY-start.y)*introEase;scale=(.34+i*.04)+(targetScale-(.34+i*.04))*Math.min(1,introEase);blur=8.5+(targetBlur-8.5)*Math.min(1,introEase);opacity=targetOpacity*Math.max(0,Math.min(1,(introT-.08)/.92));}const z=depth>.48?26:8;el.style.transform=`translate(calc(-50% + ${x}px),calc(-50% + ${y}px)) scale(${scale})`;el.style.filter=`blur(${blur.toFixed(2)}px)`;el.style.opacity=opacity;el.style.zIndex=z;el.querySelector('.thumb').style.boxShadow=depth>.58?'0 12px 32px rgba(0,0,0,.28),0 0 24px rgba(255,211,133,.52)':'0 8px 20px rgba(0,0,0,.2)';});requestAnimationFrame(orbitTick)}requestAnimationFrame(orbitTick);
 orbit.addEventListener('pointerdown',e=>{if(!orbitIntroDone)return;drag=true;lastX=e.clientX;orbit.setPointerCapture(e.pointerId)});orbit.addEventListener('pointermove',e=>{if(!drag)return;angle+=(e.clientX-lastX)*.008;lastX=e.clientX;maybeAdvanceTimeline();});orbit.addEventListener('pointerup',()=>drag=false);orbit.addEventListener('pointercancel',()=>drag=false);
 function transitionToLoveLetter(){
+  if(isMusicPlaying){
+    const fadeTimer = setInterval(()=>{
+      if(bgMusic.volume > 0.05){
+        bgMusic.volume = Math.max(0, bgMusic.volume - 0.05);
+      } else {
+        bgMusic.pause();
+        clearInterval(fadeTimer);
+      }
+    }, 120);
+  }
   const layer=document.getElementById('pageMoonTransition');
   const moon=layer.querySelector('.transition-moon');
   const flare=layer.querySelector('.transition-flare');
