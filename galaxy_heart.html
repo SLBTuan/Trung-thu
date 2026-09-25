@@ -140,6 +140,7 @@
   </div>
   <div class="page-moon-transition" id="pageMoonTransition" aria-hidden="true"><div class="veil"></div><div class="transition-flare"></div><div class="transition-moon"></div></div>
 </div>
+<a id="autoNext" href="./love_letter_transition.html" style="display:none"></a>
 <script>
 /* Romantic Mid-Autumn music box audio — copied from demo */
 let synth=null,fxSynth=null,fxReverb=null,musicPart=null,isMusicPlaying=false;
@@ -620,8 +621,10 @@ function transitionToLoveLetter(){
     {opacity:1,transform:'translate(-50%,-50%) scale(1.25)',offset:.58},
     {opacity:1,transform:'translate(-50%,-50%) scale(12)'}
   ],{duration:2050,easing:'cubic-bezier(.2,.72,.18,1)',fill:'forwards'});
+  setTimeout(() => {
+  document.getElementById('autoNext').click();
+}, 1880);
 
-  setTimeout(()=>{ location.href='./love_letter_transition.html?from=galaxy'; },1880);
 }
 let beat=0;const heart=document.getElementById('heart'),count=document.getElementById('count'),progress=document.getElementById('progress');heart.style.opacity='0';heart.style.animation='none';heart.addEventListener('click',()=>{beat=Math.min(3,beat+1);count.textContent=beat;progress.style.width=(beat/3*100)+'%';burst();playChimeNote(['E5','G5','C6'][beat-1]||'E5');heart.animate([{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.14)'},{transform:'translate(-50%,-50%) scale(.97)'},{transform:'translate(-50%,-50%) scale(1.09)'},{transform:'translate(-50%,-50%) scale(1)'}],{duration:680,easing:'cubic-bezier(.2,.9,.2,1)'});if(beat===3)setTimeout(transitionToLoveLetter,420)});
 function burst(){const scene=document.getElementById('scene');for(let i=0;i<16;i++){const p=document.createElement('span');p.textContent=i%3===0?'✦':(i%3===1?'♡':'✧');Object.assign(p.style,{position:'absolute',left:'50%',top:'58%',zIndex:50,color:i%2?'#fff6e8':'#ffbad0',fontSize:(12+Math.random()*16)+'px',pointerEvents:'none',filter:'drop-shadow(0 0 6px currentColor)'});scene.appendChild(p);const a=Math.random()*Math.PI*2,r=80+Math.random()*170;p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{opacity:1,offset:.18},{transform:`translate(calc(-50% + ${Math.cos(a)*r}px),calc(-50% + ${Math.sin(a)*r}px)) rotate(${Math.random()*220}deg) scale(1.2)`,opacity:0}],{duration:1050+Math.random()*680,easing:'cubic-bezier(.2,.7,.2,1)'}).onfinish=()=>p.remove()}}
